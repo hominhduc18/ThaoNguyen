@@ -81,7 +81,7 @@ export default function CustomCursor() {
         ref={dotRef}
         className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999] hidden md:block"
         style={{
-          background: "linear-gradient(135deg, #F9D0D0, #D4A847)",
+          background: "linear-gradient(135deg, var(--text-accent-pink), var(--text-accent-gold))",
           willChange: "transform",
           transition: "background 0.2s ease",
         }}
@@ -91,7 +91,8 @@ export default function CustomCursor() {
         ref={ringRef}
         className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[9998] hidden md:block"
         style={{
-          border: "1.5px solid rgba(249,208,208,0.6)",
+          border: "1.5px solid var(--text-accent-pink)",
+          opacity: 0.6,
           willChange: "transform",
           transition: "width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease",
         }}

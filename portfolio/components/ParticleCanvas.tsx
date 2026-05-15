@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Particle {
   x: number;
@@ -12,15 +13,9 @@ interface Particle {
   color: string;
 }
 
-const COLORS = [
-  "rgba(249,208,208,",
-  "rgba(250,218,221,",
-  "rgba(212,168,71,",
-  "rgba(232,200,112,",
-];
-
 export default function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,14 +27,19 @@ export default function ParticleCanvas() {
     let height = (canvas.height = window.innerHeight);
     let animId: number;
 
-    const count = Math.floor((width * height) / 18000);
+    const isDark = theme === "dark";
+    const COLORS = isDark 
+      ? ["rgba(249,208,208,", "rgba(250,218,221,", "rgba(212,168,71,", "rgba(232,200,112,"]
+      : ["rgba(192,80,92,", "rgba(184,64,96,", "rgba(160,120,32,", "rgba(192,144,48,"];
+
+    const count = Math.floor((width * height) / 20000);
     const particles: Particle[] = Array.from({ length: count }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      radius: Math.random() * 1.5 + 0.3,
-      opacity: Math.random() * 0.5 + 0.1,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: (Math.random() - 0.5) * 0.2,
+      radius: Math.random() * 1.5 + 0.5,
+      opacity: Math.random() * (isDark ? 0.4 : 0.2) + 0.1,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }));
 
@@ -52,9 +52,11 @@ export default function ParticleCanvas() {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
+          if (dist < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(249,208,208,${0.04 * (1 - dist / 120)})`;
+            ctx.strokeStyle = isDark 
+              ? `rgba(249,208,208,${0.03 * (1 - dist / 100)})`
+              : `rgba(160,120,32,${0.02 * (1 - dist / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -94,12 +96,13 @@ export default function ParticleCanvas() {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [theme]); // Re-run when theme changes
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none opacity-60"
+      className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-1000"
+      style={{ opacity: "var(--particle-opacity)" }}
     />
   );
 }
