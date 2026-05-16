@@ -10,7 +10,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative py-10 px-6" style={{ borderTop: "1px solid var(--glass-border)" }}>
+    <footer className="relative pt-10 pb-32 px-6" style={{ borderTop: "1px solid var(--glass-border)" }}>
       {/* Gradient top line */}
       <div
         className="absolute top-0 inset-x-0 h-px"
@@ -23,7 +23,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row items-center justify-between gap-4"
+          className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4"
         >
           {/* Logo */}
           <span className="text-xl font-bold gradient-text font-syne" style={{ fontFamily: "var(--font-syne)" }}>
@@ -35,18 +35,31 @@ export default function Footer() {
             <p className="text-xs" style={{ color: "var(--text-muted)" }}>
               © {year} Nguyễn Thảo · {c.copyright[lang]}
             </p>
-            <p className="text-xs" style={{ color: "var(--text-muted)", opacity: 0.7 }}>
-              {c.subtitle[lang]}
-            </p>
           </div>
 
           {/* Location */}
-          <div className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
+          <div className="flex items-center gap-1.5 text-xs pr-2 md:pr-32" style={{ color: "var(--text-muted)" }}>
             <span>📍</span>
             <span>{c.location[lang]}</span>
           </div>
         </motion.div>
       </div>
+
+      {/* Floating Twinkle Character */}
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        whileHover={{ scale: 1.1, rotate: -10 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ duration: 0.8, type: "spring", bounce: 0.6 }}
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] w-20 h-20 md:w-28 md:h-28 cursor-pointer drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        title="Hi từ Twinkle!"
+      >
+        <div className="w-full h-full overflow-hidden rounded-[2rem] border-4 border-[#FFD700] bg-white relative shadow-[0_0_20px_rgba(255,215,0,0.4)]">
+          <img src="/twinkle.png" alt="Twinkle" className="w-full h-full object-cover" />
+        </div>
+      </motion.div>
     </footer>
   );
 }

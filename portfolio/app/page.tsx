@@ -10,7 +10,7 @@ import CustomCursor from "@/components/CustomCursor";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#0C0D0F]">
+    <main className="relative min-h-screen">
       {/* Background canvas + cursor */}
       <ParticleCanvas />
       <CustomCursor />

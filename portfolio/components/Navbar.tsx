@@ -46,8 +46,7 @@ export default function Navbar() {
         {/* Logo */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="font-syne text-xl font-bold tracking-tight"
-          style={{ fontFamily: "var(--font-syne)" }}
+          className="font-serif text-lg font-bold tracking-tight"
         >
           <span className="gradient-text">TN.</span>
         </button>

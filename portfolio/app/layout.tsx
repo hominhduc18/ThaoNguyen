@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Syne, Instrument_Sans } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LangProvider } from "@/contexts/LanguageContext";
 
-const syne = Syne({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-syne",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-serif",
   display: "swap",
+  style: ["normal", "italic"],
 });
 
-const instrumentSans = Instrument_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-instrument",
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`${syne.variable} ${instrumentSans.variable}`} data-theme="dark">
-      <body className={`${instrumentSans.className} noise-overlay`}>
+    <html lang="vi" className={`${cormorant.variable} ${inter.variable}`} data-theme="dark">
+      <body className={`${inter.className} noise-overlay`}>
         <ThemeProvider>
           <LangProvider>
             {children}
