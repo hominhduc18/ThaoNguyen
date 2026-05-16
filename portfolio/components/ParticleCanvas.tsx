@@ -43,46 +43,82 @@ export default function ParticleCanvas() {
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }));
 
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
+      const heartsCount = 15; // Number of floating hearts
+      const hearts: Particle[] = Array.from({ length: heartsCount }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -Math.random() * 0.5 - 0.2, // Float upwards
+        radius: Math.random() * 12 + 10, // Size of heart (bơm to lên)
+        opacity: Math.random() * 0.5 + 0.15,
+        color: "rgba(255, 192, 203,", // Pink
+      }));
 
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.strokeStyle = isDark 
-              ? `rgba(249,208,208,${0.03 * (1 - dist / 100)})`
-              : `rgba(160,120,32,${0.02 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+              ctx.beginPath();
+              ctx.strokeStyle = isDark 
+                ? `rgba(249,208,208,${0.03 * (1 - dist / 100)})`
+                : `rgba(160,120,32,${0.02 * (1 - dist / 100)})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
           }
         }
-      }
 
-      // Draw particles
-      particles.forEach((p) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `${p.color}${p.opacity})`;
-        ctx.fill();
+        // Draw particles
+        particles.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `${p.color}${p.opacity})`;
+          ctx.fill();
 
-        p.x += p.vx;
-        p.y += p.vy;
+          p.x += p.vx;
+          p.y += p.vy;
 
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
-      });
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+        });
 
-      animId = requestAnimationFrame(draw);
-    };
+        // Draw floating hearts
+        hearts.forEach((h) => {
+          ctx.save();
+          ctx.translate(h.x, h.y);
+          const s = h.radius;
+          ctx.beginPath();
+          ctx.moveTo(0, s / 2);
+          ctx.bezierCurveTo(-s, -s / 2, -s * 2, s / 2, 0, s * 1.5);
+          ctx.bezierCurveTo(s * 2, s / 2, s, -s / 2, 0, s / 2);
+          ctx.fillStyle = `${h.color}${h.opacity})`;
+          ctx.fill();
+          ctx.restore();
+
+          h.x += h.vx;
+          h.y += h.vy; // Moves upwards
+
+          // Wrap around screen
+          if (h.y < -20) {
+            h.y = height + 20;
+            h.x = Math.random() * width;
+          }
+          if (h.x < -20) h.x = width + 20;
+          if (h.x > width + 20) h.x = -20;
+        });
+
+        animId = requestAnimationFrame(draw);
+      };
 
     draw();
 
